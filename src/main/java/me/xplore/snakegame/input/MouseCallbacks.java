@@ -1,11 +1,9 @@
 package me.xplore.snakegame.input;
 
-import org.lwjgl.glfw.GLFW;
-
 import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
 
 public class MouseCallbacks {
-    private static MouseListener instance;
+    private static MouseCallbacks instance;
     private double scrollX, scrollY;
     private double xPos, yPos, lastX, lastY;
     private boolean mouseButtonPressed[] = new boolean[4];
@@ -22,8 +20,9 @@ public class MouseCallbacks {
 
     public static MouseCallbacks get(){
         if(MouseCallbacks.instance == null){
-            instance = new MouseListener();
+            instance = new MouseCallbacks();
         }
+        return instance;
     }
 
 
