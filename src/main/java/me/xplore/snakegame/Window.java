@@ -30,24 +30,20 @@ public class Window {
 
         init();
         loop();
-        // Free callbacks and destroy window
+
         glfwFreeCallbacks(glfwWindow);
         glfwDestroyWindow(glfwWindow);
-        // Terminate GLFW and Free the ErrorCallback
+
         glfwTerminate();
         Objects.requireNonNull(glfwSetErrorCallback(null)).free();
 
     }
     public void init(){
-        // Setup an error callback. The default implementation
-        // will print the error message in System.err.
         GLFWErrorCallback.createPrint(System.err).set();
 
-        // Initialize GLFW. Most GLFW functions will not work before doing this.
         if ( !glfwInit() )
             throw new IllegalStateException("Unable to initialize GLFW");
 
-        // Configure GLFW
         glfwDefaultWindowHints();
         glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
         glfwWindowHint(GLFW_MAXIMIZED, GLFW_FALSE);
@@ -57,12 +53,12 @@ public class Window {
             throw new RuntimeException("Failed to Create Window.");
         }
 
+        // set callbacks to input callbacks
         glfwSetCursorPosCallback(glfwWindow, MouseListener::mousePosCallback);
         glfwSetMouseButtonCallback(glfwWindow, MouseListener::mouseButtonCallback);
         glfwSetScrollCallback(glfwWindow, MouseListener::mouseScrollCallback);
         glfwSetKeyCallback(glfwWindow, KeyListener::keyCallback);
 
-        // Get the thread stack and push a new frame
         try ( MemoryStack stack = stackPush() ) {
             IntBuffer pWidth = stack.mallocInt(1); // int*
             IntBuffer pHeight = stack.mallocInt(1); // int*
@@ -72,20 +68,13 @@ public class Window {
 
             // Get the resolution of the primary monitor
             GLFWVidMode vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-
-            // Center the window
-            glfwSetWindowPos(
-                    glfwWindow,
-                    (vidmode.width() - pWidth.get(0)) / 2,
-                    (vidmode.height() - pHeight.get(0)) / 2
-            );
         }
 
-        // Make openGL current context
         glfwMakeContextCurrent(glfwWindow);
+
         // enable v-sync
         glfwSwapInterval(1);
-        // show window
+
         glfwShowWindow(glfwWindow);
 
     }
@@ -97,7 +86,7 @@ public class Window {
         glClearColor(r, g, b, a);
         while ( !glfwWindowShouldClose(glfwWindow) ) {
 
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
             glfwSwapBuffers(glfwWindow);
             glfwPollEvents();
