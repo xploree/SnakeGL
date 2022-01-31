@@ -1,6 +1,7 @@
 package me.xplore.snakegame.input;
 
 import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
+import static org.lwjgl.glfw.GLFW.GLFW_RELEASE;
 
 public class MouseCallbacks {
     private static MouseCallbacks instance;
@@ -31,6 +32,9 @@ public class MouseCallbacks {
         // checks if the mouse was pressed
         if(action == GLFW_PRESS){
             get().mouseButtonPressed[button] = true;
+        } else if(action == GLFW_RELEASE) {
+            get().mouseButtonPressed[button] = false;
+            get().isDragging = false;
         }
     }
 }
