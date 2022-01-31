@@ -19,6 +19,9 @@ public class Snake {
     public void MoveRight(){
         posX += 5;
     }
+    public void IncreaseSize(int sizeToIncrease){
+        size += sizeToIncrease;
+    }
     public void Reset(){
         size = 3;
         isDead = false;
