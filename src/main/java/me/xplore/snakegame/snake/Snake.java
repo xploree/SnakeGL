@@ -3,6 +3,8 @@ package me.xplore.snakegame.snake;
 public class Snake {
     // Variable Declaration
     private long posX, posY;
+    boolean isDead = false;
+    int size = 3;
 
     // Snake Functions
     public void MoveUp(){
@@ -16,6 +18,10 @@ public class Snake {
     }
     public void MoveRight(){
         posX += 5;
+    }
+    public void Reset(){
+        size = 3;
+        isDead = false;
     }
 
 }

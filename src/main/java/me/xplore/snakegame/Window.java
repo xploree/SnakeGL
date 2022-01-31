@@ -1,5 +1,8 @@
 package me.xplore.snakegame;
 
+import me.xplore.snakegame.input.KeyListener;
+import me.xplore.snakegame.input.MouseListener;
+import me.xplore.snakegame.util.Time;
 import org.lwjgl.*;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
@@ -16,11 +19,11 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 
 public class Window {
 
-    private long glfwWindow;
+    private static long glfwWindow;
     private final String windowName = "Snake";
     int windowWidth = 600;
     int windowHeight = 600;
-
+    private float r,g,b,a;
 
     public void Run(){
         System.out.println("Running...");
@@ -53,7 +56,12 @@ public class Window {
         if(glfwWindow == NULL){
             throw new RuntimeException("Failed to Create Window.");
         }
-        // Get the thread stack and push a new frame
+
+        glfwSetCursorPosCallback(glfwWindow, MouseListener::mousePosCallback);
+        glfwSetMouseButtonCallback(glfwWindow, MouseListener::mouseButtonCallback);
+        glfwSetScrollCallback(glfwWindow, MouseListener::mouseScrollCallback);
+        glfwSetKeyCallback(glfwWindow, KeyListener::keyCallback);
+
         // Get the thread stack and push a new frame
         try ( MemoryStack stack = stackPush() ) {
             IntBuffer pWidth = stack.mallocInt(1); // int*
@@ -71,7 +79,7 @@ public class Window {
                     (vidmode.width() - pWidth.get(0)) / 2,
                     (vidmode.height() - pHeight.get(0)) / 2
             );
-        } // the stack frame is popped automatically
+        }
 
         // Make openGL current context
         glfwMakeContextCurrent(glfwWindow);
@@ -82,17 +90,20 @@ public class Window {
 
     }
     public void loop(){
+        float beginTime = Time.getTime();
+        float endTime = Time.getTime();
         GL.createCapabilities();
 
-        glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+        glClearColor(r, g, b, a);
         while ( !glfwWindowShouldClose(glfwWindow) ) {
+
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 
-            glfwSwapBuffers(glfwWindow); // swap the color buffers
-
-            // Poll for window events. The key callback above will only be
-            // invoked during this call.
+            glfwSwapBuffers(glfwWindow);
             glfwPollEvents();
+            endTime = Time.getTime();
+            float deltaTime = endTime - beginTime;
+            beginTime = endTime;
         }
     }
 }
